@@ -38,12 +38,18 @@ public class APPCodeDemo {
     }
 
     public static void main(String[] args){
-        
+
         String host = "http://dm-51.data.aliyun.com";
         String path = "/rest/160601/ocr/ocr_idcard.json";
         String appcode = "你的APPCODE";
         String imgFile = "图片路径";
         Boolean is_old_format = true;//如果文档的输入中含有inputs字段，设置为True， 否则设置为False
+        //请根据线上文档修改configure字段
+        JSONObject configObj = new JSONObject();
+        configObj.put("side", "face");
+        String config_str = configObj.toString();
+        //            configObj.put("min_size", 5);
+        //            String config_str = "";
 
         String method = "POST";
         Map<String, String> headers = new HashMap<String, String>();
@@ -68,12 +74,6 @@ public class APPCodeDemo {
         // 拼装请求body的json字符串
         JSONObject requestObj = new JSONObject();
         try {
-            //请根据线上文档修改configure字段
-            JSONObject configObj = new JSONObject();
-            configObj.put("side", "face");
-            String config_str = configObj.toString();
-//            configObj.put("min_size", 5);
-//            String config_str = "";
             if(is_old_format) {
                 JSONObject obj = new JSONObject();
                 obj.put("image", getParam(50, imgBase64));

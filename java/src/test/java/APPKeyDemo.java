@@ -4,10 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.aliyun.api.gateway.demo.Client;
+import com.aliyun.api.gateway.demo.Request;
+import com.aliyun.api.gateway.demo.Response;
 import com.aliyun.api.gateway.demo.constant.Constants;
 import com.aliyun.api.gateway.demo.constant.ContentType;
 import com.aliyun.api.gateway.demo.constant.HttpHeader;
-import com.aliyun.api.gateway.demo.constant.HttpSchema;
 import com.aliyun.api.gateway.demo.enums.Method;
 import com.aliyun.api.gateway.demo.util.MessageDigestUtil;
 import org.apache.commons.codec.binary.Base64;
@@ -52,6 +54,13 @@ public class APPKeyDemo {
         String imgFile = "图片路径";
         Boolean is_old_format = true; //如果文档的输入中含有inputs字段，设置为True， 否则设置为False
 
+        //请根据线上文档修改configure字段
+        JSONObject configObj = new JSONObject();
+        configObj.put("side", "face");
+        String config_str = configObj.toString();
+        //            configObj.put("min_size", 5);
+        //            String config_str = "";
+
         // 对图像进行base64编码
         String imgBase64 = "";
         try {
@@ -68,12 +77,6 @@ public class APPKeyDemo {
         // 拼装请求body的json字符串
         JSONObject requestObj = new JSONObject();
         try {
-            //请根据线上文档修改configure字段
-            JSONObject configObj = new JSONObject();
-            configObj.put("side", "face");
-            String config_str = configObj.toString();
-//            configObj.put("min_size", 5);
-//            String config_str = "";
             if(is_old_format) {
                 JSONObject obj = new JSONObject();
                 obj.put("image", getParam(50, imgBase64));
