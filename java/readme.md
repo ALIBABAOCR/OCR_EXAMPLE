@@ -16,5 +16,11 @@ mvn compile
 mvn exec:java -Dexec.mainClass="com.alibaba.ocr.demo.APPKeyDemo"
 mvn exec:java -Dexec.mainClass="com.alibaba.ocr.demo.APPCodeDemo"
 ```
+OR
+```
+mvn package
+java -cp target/Demo-1.0-SNAPSHOT-jar-with-dependencies.jar com.alibaba.ocr.APPKeyDemo
+java -cp target/Demo-1.0-SNAPSHOT-jar-with-dependencies.jar com.alibaba.ocr.APPCodeDemo
+```
 
 ## IDE
