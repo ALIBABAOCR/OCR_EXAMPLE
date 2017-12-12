@@ -63,7 +63,7 @@ def demo():
     app_key = '你的APP_KEY'
     app_secret = '你的APP_SECRET'
     url = 'http://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json'
-    img_file = '/Users/zhouwenmeng/ubuntu_sync/test/idcard.jpg'
+    img_file = '图片文件路径'
     #如果输入带有inputs, 设置为True，否则设为False
     is_old_format = True  
     config = {'side':'face'}
