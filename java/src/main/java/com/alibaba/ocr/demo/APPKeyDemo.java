@@ -1,4 +1,4 @@
-package com.aliyun.api.gateway.demo;
+package com.alibaba.ocr.demo;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;

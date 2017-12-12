@@ -12,8 +12,9 @@
 
 
 ```
-mvm package
-java -cp target/Demo-1.0-SNAPSHOT.jar com.aliyun.apigate.ocr_demo
+mvn compile
+mvn exec:java -Dexec.mainClass="com.alibaba.ocr.demo.APPKeyDemo"
+mvn exec:java -Dexec.mainClass="com.alibaba.ocr.demo.APPCodeDemo"
 ```
 
 ## IDE
