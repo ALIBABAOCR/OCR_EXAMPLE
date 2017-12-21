@@ -29,7 +29,6 @@
                 "dataType" => 50,
                 "dataValue" => "$base64"
         );
-        array_push($request, $pic);
 
         if(count($config) > 0){
             $request["configure"] = array(
