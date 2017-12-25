@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EAA50ED8-62E2-43DD-9C15-21DFA580BF2E}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>aliyun_api_gateway_sdk</RootNamespace>
+    <AssemblyName>aliyun-api-gateway-sdk</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <StartupObject>appkey_demo.Demo</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>anycpu</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="appkey_demo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="appkey_demo_test.cs" />
+    <Compile Include="api-gateway-demo-sign-net\Constant\Constants.cs" />
+    <Compile Include="api-gateway-demo-sign-net\Constant\ContentType.cs" />
+    <Compile Include="api-gateway-demo-sign-net\Constant\HttpHeader.cs" />
+    <Compile Include="api-gateway-demo-sign-net\Constant\HttpMethod.cs" />
+    <Compile Include="api-gateway-demo-sign-net\Constant\HttpSchema.cs" />
+    <Compile Include="api-gateway-demo-sign-net\Constant\SystemHeader.cs" />
+    <Compile Include="api-gateway-demo-sign-net\Enums\Method.cs" />
+    <Compile Include="api-gateway-demo-sign-net\Util\DateUtil.cs" />
+    <Compile Include="api-gateway-demo-sign-net\Util\DictionaryUtil.cs" />
+    <Compile Include="api-gateway-demo-sign-net\Util\HttpUtil.cs" />
+    <Compile Include="api-gateway-demo-sign-net\Util\MessageDigestUtil.cs" />
+    <Compile Include="api-gateway-demo-sign-net\Util\SignUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
