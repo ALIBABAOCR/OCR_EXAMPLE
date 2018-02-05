@@ -68,14 +68,15 @@ static std::string encode(const std::string &file) {
 }
 
 int main() {
-  // general configure
+  // 常规配置
   std::string url =
       "https://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json";
-  std::string appcode = "your appcode";
-  std::string image_file = "image file";
-  bool is_new_format = false;
+  std::string appcode = "你的Appcode";
+  std::string image_file = "图片文件位置";
+  // 新老json格式标记，如果json格式中含有inputs字段，则为老格式，默认使用新格式，请置为true
+  bool is_new_format = true;
 
-  // idcard configure
+  // 身份证配置
   std::string side = "face";  // face or back
 
   std::string image_code = encode(image_file);
