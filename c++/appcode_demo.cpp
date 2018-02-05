@@ -32,17 +32,18 @@ static size_t writeMemoryCallback(void *contents, size_t size, size_t nmemb,
 }
 
 static std::string composeJson(const std::string &image_code,
-                               const std::string &side, bool is_new_format) {
+                               const std::string &configure_str,
+                               bool is_new_format) {
   json body;
   if (is_new_format) {
-    body["configure"] = "{\"side\":\"" + side + "\"}";
+    body["configure"] = configure_str;
     body["image"] = image_code;
   } else {
     json configure, image, combine;
     image["dataType"] = 50;
     image["dataValue"] = image_code;
     configure["dataType"] = 50;
-    configure["dataValue"] = "{\"side\":\"" + side + "\"}";
+    configure["dataValue"] = configure_str;
     combine["configure"] = configure;
     combine["image"] = image;
     body["inputs"] = json::array({combine});
@@ -80,7 +81,9 @@ int main() {
   std::string side = "face";  // face or back
 
   std::string image_code = encode(image_file);
-  std::string body = composeJson(image_code, side, is_new_format);
+  // if no configure, set as ""
+  std::string configure = "{\"side\":\"" + side + "\"}";
+  std::string body = composeJson(image_code, configure, is_new_format);
 
   // http post
   CURL *curl;
@@ -109,12 +112,20 @@ int main() {
 
     res = curl_easy_perform(curl);
     long http_code = 0;
+    long header_size = 0;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+    curl_easy_getinfo(curl, CURLINFO_HEADER_SIZE, &header_size);
     if (res != CURLE_OK) {
       printf("post failed %s\n", curl_easy_strerror(res));
     } else {
-      printf("http code: %d\n", http_code);
-      printf("%s\n", response.memory);
+      if (http_code == 200) {
+        printf("%s\n", response.memory + header_size);
+      } else {
+        printf("http code: %d\n", http_code);
+        char buf[header_size];
+        memcpy(buf, response.memory, header_size);
+        printf("%s\n", buf);
+      }
     }
 
     curl_easy_cleanup(curl);
