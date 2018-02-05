@@ -32,15 +32,21 @@ static size_t writeMemoryCallback(void *contents, size_t size, size_t nmemb,
 }
 
 static std::string composeJson(const std::string &image_code,
-                               const std::string &side) {
-  json body, configure, image, combine;
-  image["dataType"] = 50;
-  image["dataValue"] = image_code;
-  configure["dataType"] = 50;
-  configure["dataValue"] = "{\"side\":\"" + side + "\"}";
-  combine["configure"] = configure;
-  combine["image"] = image;
-  body["inputs"] = json::array({combine});
+                               const std::string &side, bool is_new_format) {
+  json body;
+  if (is_new_format) {
+    body["configure"] = "{\"side\":\"" + side + "\"}";
+    body["image"] = image_code;
+  } else {
+    json configure, image, combine;
+    image["dataType"] = 50;
+    image["dataValue"] = image_code;
+    configure["dataType"] = 50;
+    configure["dataValue"] = "{\"side\":\"" + side + "\"}";
+    combine["configure"] = configure;
+    combine["image"] = image;
+    body["inputs"] = json::array({combine});
+  }
   return body.dump();
 }
 
@@ -62,23 +68,28 @@ static std::string encode(const std::string &file) {
 }
 
 int main() {
+  // general configure
   std::string url =
       "https://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json";
   std::string appcode = "your appcode";
   std::string image_file = "image file";
-  std::string side = "face"; // face or back
+  bool is_new_format = false;
+
+  // idcard configure
+  std::string side = "face";  // face or back
 
   std::string image_code = encode(image_file);
-  std::string body = composeJson(image_code, side);
+  std::string body = composeJson(image_code, side, is_new_format);
 
   // http post
   CURL *curl;
   CURLcode res;
-  struct MemoryStruct response;
-  response.memory = malloc(1);
-  response.size = 0;
   curl = curl_easy_init();
   if (curl) {
+    struct MemoryStruct response;
+    response.memory = malloc(1);
+    response.size = 0;
+
     struct curl_slist *custom_header = NULL;
     custom_header = curl_slist_append(
         custom_header, std::string("Authorization:APPCODE " + appcode).c_str());
@@ -91,12 +102,17 @@ int main() {
     curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, body.size());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeMemoryCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&response);
+    // comment this line to ignore reponse header
+    curl_easy_setopt(curl, CURLOPT_HEADER, 1L);
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
 
     res = curl_easy_perform(curl);
+    long http_code = 0;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
     if (res != CURLE_OK) {
       printf("post failed %s\n", curl_easy_strerror(res));
     } else {
+      printf("http code: %d\n", http_code);
       printf("%s\n", response.memory);
     }
 
