@@ -36,15 +36,17 @@ static std::string composeJson(const std::string &image_code,
                                bool is_new_format) {
   json body;
   if (is_new_format) {
-    body["configure"] = configure_str;
+    if (configure_str.size() > 0) body["configure"] = configure_str;
     body["image"] = image_code;
   } else {
     json configure, image, combine;
     image["dataType"] = 50;
     image["dataValue"] = image_code;
-    configure["dataType"] = 50;
-    configure["dataValue"] = configure_str;
-    combine["configure"] = configure;
+    if (configure_str.size() > 0) {
+      configure["dataType"] = 50;
+      configure["dataValue"] = configure_str;
+      combine["configure"] = configure;
+    }
     combine["image"] = image;
     body["inputs"] = json::array({combine});
   }
@@ -68,7 +70,8 @@ static std::string encode(const std::string &file) {
   return image_code;
 }
 
-static void httpPost(const std::string& url, const std::string& appcode, const std::string& body) {
+static void httpPost(const std::string &url, const std::string &appcode,
+                     const std::string &body) {
   CURL *curl;
   CURLcode res;
   curl = curl_easy_init();
@@ -101,14 +104,13 @@ static void httpPost(const std::string& url, const std::string& appcode, const s
     if (res != CURLE_OK) {
       printf("post failed %s\n", curl_easy_strerror(res));
     } else {
-      if (http_code == 200) {
-        printf("%s\n", response.memory + header_size);
-      } else {
+      if (http_code != 200) {
         printf("http code: %d\n", http_code);
         char buf[header_size];
         memcpy(buf, response.memory, header_size);
         printf("%s\n", buf);
       }
+      printf("%s\n", response.memory + header_size);
     }
 
     curl_easy_cleanup(curl);
