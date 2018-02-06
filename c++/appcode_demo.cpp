@@ -68,24 +68,7 @@ static std::string encode(const std::string &file) {
   return image_code;
 }
 
-int main() {
-  // 常规配置
-  std::string url =
-      "https://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json";
-  std::string appcode = "你的Appcode";
-  std::string image_file = "图片文件位置";
-  // 新老json格式标记，如果json格式中含有inputs字段，则为老格式，默认使用新格式，请置为true
-  bool is_new_format = true;
-
-  // 身份证配置
-  std::string side = "face";  // face or back
-
-  std::string image_code = encode(image_file);
-  // if no configure, set as ""
-  std::string configure = "{\"side\":\"" + side + "\"}";
-  std::string body = composeJson(image_code, configure, is_new_format);
-
-  // http post
+static void httpPost(const std::string& url, const std::string& appcode, const std::string& body) {
   CURL *curl;
   CURLcode res;
   curl = curl_easy_init();
@@ -133,6 +116,24 @@ int main() {
     curl_slist_free_all(custom_header);
     curl_global_cleanup();
   }
+}
 
+int main() {
+  // 常规配置
+  std::string url =
+      "https://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json";
+  std::string appcode = "你的Appcode";
+  std::string image_file = "图片文件位置";
+  // 新老json格式标记，如果json格式中含有inputs字段，则为老格式，默认使用新格式，请置为true
+  bool is_new_format = true;
+  // 身份证配置 face or back
+  std::string side = "face";
+
+  // base64 encode
+  std::string image_code = encode(image_file);
+  // if no configure, set as ""
+  std::string configure = "{\"side\":\"" + side + "\"}";
+  std::string body = composeJson(image_code, configure, is_new_format);
+  httpPost(url, appcode, body);
   return 0;
 }
