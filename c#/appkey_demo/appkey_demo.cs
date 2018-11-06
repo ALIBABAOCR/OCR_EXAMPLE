@@ -33,7 +33,7 @@ namespace appkey_demo
             String base64 = System.Convert.ToBase64String(contentBytes);
             String bodys;
             bodys = "{\"image\":\"" + base64 + "\"";
-            if (config.Length > 0)
+            if (configure.Length > 0)
             {
                 bodys += ",\"configure\" :\"" + configure + "\"";
             }
