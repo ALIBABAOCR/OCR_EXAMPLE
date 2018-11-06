@@ -52,7 +52,6 @@ public class APPKeyDemo {
         String APP_SECRET = "你的APPSECRET";
 
         String imgFile = "图片路径";
-        Boolean is_old_format = true; //如果文档的输入中含有inputs字段，设置为True， 否则设置为False
 
         //请根据线上文档修改configure字段
         JSONObject configObj = new JSONObject();
@@ -77,20 +76,9 @@ public class APPKeyDemo {
         // 拼装请求body的json字符串
         JSONObject requestObj = new JSONObject();
         try {
-            if(is_old_format) {
-                JSONObject obj = new JSONObject();
-                obj.put("image", getParam(50, imgBase64));
-                if(config_str.length() > 0) {
-                    obj.put("configure", getParam(50, config_str));
-                }
-                JSONArray inputArray = new JSONArray();
-                inputArray.add(obj);
-                requestObj.put("inputs", inputArray);
-            }else{
-                requestObj.put("image", imgBase64);
-                if(config_str.length() > 0) {
-                    requestObj.put("configure", config_str);
-                }
+            requestObj.put("image", imgBase64);
+            if(config_str.length() > 0) {
+                requestObj.put("configure", config_str);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -125,13 +113,6 @@ public class APPKeyDemo {
         }
         String res = response.getBody();
         JSONObject res_obj = JSON.parseObject(res);
-        if(is_old_format) {
-            JSONArray outputArray = res_obj.getJSONArray("outputs");
-            String output = outputArray.getJSONObject(0).getJSONObject("outputValue").getString("dataValue");
-            JSONObject out = JSON.parseObject(output);
-            System.out.println(out.toJSONString());
-        }else{
-            System.out.println(res_obj.toJSONString());
-        }
+        System.out.println(res_obj.toJSONString());
     }
 }

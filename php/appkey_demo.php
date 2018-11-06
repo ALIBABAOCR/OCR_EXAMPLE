@@ -32,14 +32,11 @@
     $url = "http://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json";
     $file = "/Users/zhouwenmeng/ubuntu_sync/test/idcard.jpg"; // 文件路径 
     
-    //如果输入带有inputs, 设置为True，否则设为False
-    $is_old_format = false;
-    
-    //如果没有configure字段，config设为空
-    $config = array(
+    //如果没有configure字段，configure设为空
+    $configure = array(
         "side" => "face"
     );
-    //$config = array()
+    //$configure = array()
 
     if($fp = fopen($file, "rb", 0)) { 
         $binary = fread($fp, filesize($file)); // 文件读取
@@ -47,38 +44,17 @@
         $base64 = base64_encode($binary); // 转码
     }
 
-    if($is_old_format == TRUE){
-        $request = array();
-        $request["image"] = array(
-                "dataType" => 50,
-                "dataValue" => "$base64"
-        );
-
-        if(count($config) > 0){
-            $request["configure"] = array(
-                    "dataType" => 50,
-                    "dataValue" => json_encode($config) 
-                );
-        }
-        $body = json_encode(array("inputs" => array($request)));
-    }else{
-        $request = array(
-            "image" => "$base64"
-        );
-        if(count($config) > 0){
-            $request["configure"] = json_encode($config);
-        }
-        $body = json_encode($request);
+    $request = array(
+        "image" => "$base64"
+    );
+    if(count($configure) > 0){
+        $request["configure"] = json_encode($configure);
     }
+    $body = json_encode($request);
     $response = doPost($url, $appKey, $appSecret, $body);
     $stat = $response->getHttpStatusCode();
     if($stat == 200){
-        if($is_old_format){
-            $output = json_decode($response->getBody(), true);
-            $result_str = $output["outputs"][0]["outputValue"]["dataValue"];
-        }else{
-            $result_str = $response->getBody();
-        }
+        $result_str = $response->getBody();
         printf("result is :\n %s\n", $result_str);
 
     }else{
