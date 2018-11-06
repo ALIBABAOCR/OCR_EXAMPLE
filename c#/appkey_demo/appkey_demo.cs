@@ -22,12 +22,9 @@ namespace appkey_demo
                 String appSecret = "你自己的AppSecret";
                 String imgFile = "图片路径";
 
-            //如果输入带有inputs, 设置为True，否则设为False
-            bool isOldFormat = true;
-
-            //如果没有configure字段，config设为''
-            //String config = '';
-            String config = "{\\\"side\\\":\\\"face\\\"}";
+            //如果没有configure字段，configure设为''
+            //String configure = '';
+            String configure = "{\\\"side\\\":\\\"face\\\"}";
 
 
             FileStream fs = new FileStream(imgFile, FileMode.Open);
@@ -35,31 +32,12 @@ namespace appkey_demo
             byte[] contentBytes = br.ReadBytes(Convert.ToInt32(fs.Length));
             String base64 = System.Convert.ToBase64String(contentBytes);
             String bodys;
-            if (isOldFormat)
+            bodys = "{\"image\":\"" + base64 + "\"";
+            if (config.Length > 0)
             {
-                bodys = "{\"inputs\" :" +
-                                    "[{\"image\" :" +
-                                        "{\"dataType\" : 50," +
-                                         "\"dataValue\" :\"" + base64 + "\"" +
-                                         "}";
-                if (config.Length > 0)
-                {
-                    bodys += ",\"configure\" :" +
-                                    "{\"dataType\" : 50," +
-                                     "\"dataValue\" : \"" + config + "\"}" +
-                                     "}";
-                }
-                bodys += "]}";
+                bodys += ",\"configure\" :\"" + configure + "\"";
             }
-            else
-            {
-                bodys = "{\"image\":\"" + base64 + "\"";
-                if (config.Length > 0)
-                {
-                    bodys += ",\"configure\" :\"" + config + "\"";
-                }
-                bodys += "}";
-            }
+            bodys += "}";
 
             Dictionary<String, String> headers = new Dictionary<string, string>();
             Dictionary<String, String> querys = new Dictionary<string, string>();

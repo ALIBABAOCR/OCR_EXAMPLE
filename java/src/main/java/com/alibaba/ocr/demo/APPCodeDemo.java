@@ -44,7 +44,6 @@ public class APPCodeDemo {
         String path = "/rest/160601/ocr/ocr_idcard.json";
         String appcode = "你的APPCODE";
         String imgFile = "图片路径";
-        Boolean is_old_format = true;//如果文档的输入中含有inputs字段，设置为True， 否则设置为False
         //请根据线上文档修改configure字段
         JSONObject configObj = new JSONObject();
         configObj.put("side", "face");
@@ -54,7 +53,7 @@ public class APPCodeDemo {
 
         String method = "POST";
         Map<String, String> headers = new HashMap<String, String>();
-        //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
+        //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359d73e9498385570ec139105
         headers.put("Authorization", "APPCODE " + appcode);
 
         Map<String, String> querys = new HashMap<String, String>();
@@ -75,20 +74,9 @@ public class APPCodeDemo {
         // 拼装请求body的json字符串
         JSONObject requestObj = new JSONObject();
         try {
-            if(is_old_format) {
-                JSONObject obj = new JSONObject();
-                obj.put("image", getParam(50, imgBase64));
-                if(config_str.length() > 0) {
-                    obj.put("configure", getParam(50, config_str));
-                }
-                JSONArray inputArray = new JSONArray();
-                inputArray.add(obj);
-                requestObj.put("inputs", inputArray);
-            }else{
-                requestObj.put("image", imgBase64);
-                if(config_str.length() > 0) {
-                    requestObj.put("configure", config_str);
-                }
+            requestObj.put("image", imgBase64);
+            if(config_str.length() > 0) {
+                requestObj.put("configure", config_str);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -116,14 +104,7 @@ public class APPCodeDemo {
 
             String res = EntityUtils.toString(response.getEntity());
             JSONObject res_obj = JSON.parseObject(res);
-            if(is_old_format) {
-                JSONArray outputArray = res_obj.getJSONArray("outputs");
-                String output = outputArray.getJSONObject(0).getJSONObject("outputValue").getString("dataValue");
-                JSONObject out = JSON.parseObject(output);
-                System.out.println(out.toJSONString());
-            }else{
-                System.out.println(res_obj.toJSONString());
-            }
+            System.out.println(res_obj.toJSONString());
         } catch (Exception e) {
             e.printStackTrace();
         }
