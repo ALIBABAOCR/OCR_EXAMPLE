@@ -43,7 +43,7 @@ public class APPCodeDemo {
         String host = "http://dm-51.data.aliyun.com";
         String path = "/rest/160601/ocr/ocr_idcard.json";
         String appcode = "你的APPCODE";
-        String imgFile = "图片路径";
+        String imgFile = "图片路径/图片URL";
         //请根据线上文档修改configure字段
         JSONObject configObj = new JSONObject();
         configObj.put("side", "face");
@@ -61,12 +61,16 @@ public class APPCodeDemo {
         // 对图像进行base64编码
         String imgBase64 = "";
         try {
-            File file = new File(imgFile);
-            byte[] content = new byte[(int) file.length()];
-            FileInputStream finputstream = new FileInputStream(file);
-            finputstream.read(content);
-            finputstream.close();
-            imgBase64 = new String(encodeBase64(content));
+            if(imgFile.startsWith("http")){
+                imgBase64 = imgFile;
+            }else {
+                File file = new File(imgFile);
+                byte[] content = new byte[(int) file.length()];
+                FileInputStream finputstream = new FileInputStream(file);
+                finputstream.read(content);
+                finputstream.close();
+                imgBase64 = new String(encodeBase64(content));
+            }
         } catch (IOException e) {
             e.printStackTrace();
             return;

@@ -51,7 +51,7 @@ public class APPKeyDemo {
         String APP_KEY = "你的APPKEY";
         String APP_SECRET = "你的APPSECRET";
 
-        String imgFile = "图片路径";
+        String imgFile = "图片路径/图片URL";
 
         //请根据线上文档修改configure字段
         JSONObject configObj = new JSONObject();
@@ -63,12 +63,16 @@ public class APPKeyDemo {
         // 对图像进行base64编码
         String imgBase64 = "";
         try {
-            File file = new File(imgFile);
-            byte[] content = new byte[(int) file.length()];
-            FileInputStream finputstream = new FileInputStream(file);
-            finputstream.read(content);
-            finputstream.close();
-            imgBase64 = new String(Base64.encodeBase64(content));
+            if(imgFile.startsWith("http")){
+                imgBase64 = imgFile;
+            }else {
+                File file = new File(imgFile);
+                byte[] content = new byte[(int) file.length()];
+                FileInputStream finputstream = new FileInputStream(file);
+                finputstream.read(content);
+                finputstream.close();
+                imgBase64 = new String(Base64.encodeBase64(content));
+            }
         } catch (IOException e) {
             e.printStackTrace();
             return;

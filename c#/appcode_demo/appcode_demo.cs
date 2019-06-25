@@ -13,7 +13,7 @@ namespace appcode_demo
         {
             String url = "http://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json";
             String appcode = "你自己的AppCode";
-            String img_file = "图片路径";
+            String img_file = "图片路径/图片URL";
 
             //如果没有configure字段，configure设为''
             //String configure = '';
@@ -23,10 +23,16 @@ namespace appcode_demo
 
             String querys = "";
 
-            FileStream fs = new FileStream(img_file, FileMode.Open);
-            BinaryReader br = new BinaryReader(fs);
-            byte[] contentBytes = br.ReadBytes(Convert.ToInt32(fs.Length));
-            String base64 = System.Convert.ToBase64String(contentBytes);
+            String base64 = "";
+            if(img_file.StartsWith("http")) {
+                base64 = img_file;
+            }else {
+                FileStream fs = new FileStream(img_file, FileMode.Open);
+                BinaryReader br = new BinaryReader(fs);
+                byte[] contentBytes = br.ReadBytes(Convert.ToInt32(fs.Length));
+                base64 = System.Convert.ToBase64String(contentBytes);
+            }
+
             String bodys;
             bodys = "{\"image\":\"" + base64 + "\"";
             if (configure.Length > 0)

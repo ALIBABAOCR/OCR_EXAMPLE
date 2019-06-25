@@ -17,7 +17,7 @@ static size_t writeMemoryCallback(void *contents, size_t size, size_t nmemb,
   size_t realsize = size * nmemb;
   struct MemoryStruct *mem = (struct MemoryStruct *)userp;
 
-  mem->memory = realloc(mem->memory, mem->size + realsize + 1);
+  mem->memory = (char*)realloc(mem->memory, mem->size + realsize + 1);
   if (mem->memory == NULL) {
     /* out of memory! */
     printf("not enough memory (realloc returned NULL)\n");
@@ -63,7 +63,7 @@ static void httpPost(const std::string &url, const std::string &appcode,
   curl = curl_easy_init();
   if (curl) {
     struct MemoryStruct response;
-    response.memory = malloc(1);
+    response.memory =(char*) malloc(1);
     response.size = 0;
 
     struct curl_slist *custom_header = NULL;
@@ -91,7 +91,7 @@ static void httpPost(const std::string &url, const std::string &appcode,
       printf("post failed %s\n", curl_easy_strerror(res));
     } else {
       if (http_code != 200) {
-        printf("http code: %d\n", http_code);
+        printf("http code: %ld\n", http_code);
         char buf[header_size];
         memcpy(buf, response.memory, header_size);
         printf("%s\n", buf);
@@ -111,12 +111,17 @@ int main() {
   std::string url =
       "https://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json";
   std::string appcode = "你的Appcode";
-  std::string image_file = "图片文件位置";
+  std::string image = "图片路径/图片url";
   // 身份证配置 face or back
   std::string side = "face";
 
-  // base64 encode
-  std::string image_code = encode(image_file);
+  std::string image_code;
+  if(image.substr(0, 4) == "http"){
+      image_code = image;
+  }else{
+      // base64 encode
+      image_code = encode(image);
+  }
   // if no configure, set as ""
   std::string configure = "{\"side\":\"" + side + "\"}";
   std::string body = composeJson(image_code, configure);

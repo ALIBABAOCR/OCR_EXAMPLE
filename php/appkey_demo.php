@@ -30,7 +30,7 @@
     $appKey = "你的APPKEY";
     $appSecret = "你的APPSECRET";
     $url = "http://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json";
-    $file = "/Users/zhouwenmeng/ubuntu_sync/test/idcard.jpg"; // 文件路径 
+    $file = "图片路径/图片URL"; 
     
     //如果没有configure字段，configure设为空
     $configure = array(
@@ -38,7 +38,9 @@
     );
     //$configure = array()
 
-    if($fp = fopen($file, "rb", 0)) { 
+    if(substr($file, 0, 4) == "http") {
+        $base64 = $file; 
+    }else if($fp = fopen($file, "rb", 0)) { 
         $binary = fread($fp, filesize($file)); // 文件读取
         fclose($fp); 
         $base64 = base64_encode($binary); // 转码

@@ -3,7 +3,7 @@
 
     $url = "https://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json";
     $appcode = "你的APPCODE";
-    $file = "你的文件路径"; 
+    $file = "你的文件路径/图片url"; 
     //如果没有configure字段，configure设为空
     $configure = array(
         "side" => "face"
@@ -11,7 +11,9 @@
     //$configure = array()
 
 
-    if($fp = fopen($file, "rb", 0)) { 
+    if(substr($file, 0, 4) == "http") {
+        $base64 = $file; 
+    }else if($fp = fopen($file, "rb", 0)) { 
         $binary = fread($fp, filesize($file)); // 文件读取
         fclose($fp); 
         $base64 = base64_encode($binary); // 转码

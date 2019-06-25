@@ -39,12 +39,15 @@ def predict(url, appcode, img_base64, kv_configure):
 def demo():
     appcode = '你的APPCODE'
     url = 'http://dm-51.data.aliyun.com/rest/160601/ocr/ocr_idcard.json'
-    img_file = '图片文件路径'
+    img_file = '图片文件路径/图片url'
     configure = {'side':'face'}
     #如果没有configure字段，configure设为None
     #configure = None
 
-    img_base64data = get_img_base64(img_file)
+    if img_file[:4] == 'http':
+        img_base64data = img_file
+    else:
+        img_base64data = get_img_base64(img_file)
     stat, header, content = predict( url, appcode, img_base64data, configure)
     if stat != 200:
         print 'Http status code: ', stat
