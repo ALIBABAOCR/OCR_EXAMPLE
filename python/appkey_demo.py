@@ -55,7 +55,7 @@ def demo():
     else:
         img_base64data = get_img_base64(img_file)
 
-    stat, header, content = predict( url, app_key, app_secret, img_base64data, config)
+    stat, header, content = predict( url, app_key, app_secret, img_base64data, configure)
     if stat != 200:
         print 'Http status code: ', stat
         print 'Error msg in header: ', header['x-ca-error-message'] if 'x-ca-error-message' in header else ''
